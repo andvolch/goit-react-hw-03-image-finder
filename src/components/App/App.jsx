@@ -5,10 +5,13 @@ import Filter from '../Filter/Filter';
 import ContactList from '../ContactList/ContactList';
 import dataBaseContacts from '../../data/contacts.json';
 
+import Modal from '../Modal/Modal';
+
 class App extends Component {
   state = {
     contacts: dataBaseContacts,
     filter: '',
+    showModal: false,
   };
 
   componentDidMount() {
@@ -58,12 +61,21 @@ class App extends Component {
     );
   };
 
+  // Передать на onClick для открытия или закрытия//
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
+
   render() {
-    const { filter } = this.state;
+    const { filter, showModal } = this.state;
     const displayContacts = this.getDisplayContacts();
 
     return (
       <div>
+        {showModal && <Modal onClose={this.toggleModal} />}
+
         <h1>Phonebook</h1>
         <ContactForm submit={this.formSubmitHandler} />
 
