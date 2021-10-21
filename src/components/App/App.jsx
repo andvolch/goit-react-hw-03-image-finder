@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import ContactForm from './components/ContactForm/ContactForm';
-import Filter from './components/Filter/Filter';
-import ContactList from './components/ContactList/ContactList';
-import dataBaseContacts from './data/contacts.json';
+import ContactForm from '../ContactForm/ContactForm';
+import Filter from '../Filter/Filter';
+import ContactList from '../ContactList/ContactList';
+import dataBaseContacts from '../../data/contacts.json';
 
 class App extends Component {
   state = {
