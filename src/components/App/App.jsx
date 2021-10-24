@@ -1,65 +1,78 @@
 import React, { Component } from 'react';
-
-import ContactForm from '../ContactForm/ContactForm';
-import Filter from '../Filter/Filter';
-import ContactList from '../ContactList/ContactList';
-import dataBaseContacts from '../../data/contacts.json';
-
+// import axios from 'axios';
+// import ContactForm from '../ContactForm/ContactForm';
+// import Filter from '../Filter/Filter';
+// import ContactList from '../ContactList/ContactList';
 import Modal from '../Modal/Modal';
+import Searchbar from '../Searchbar/Searchbar';
+import ImageGallery from '../ImageGallery/ImageGallery';
+
+import getPicturesPixabayApi from '../../services/pixabay-api';
+
+// import axios from 'axios';
+
+// const BASE_URL = 'https://pixabay.com/api/?image_type=photo&orientation=horizontal';
+// const KEY_API = '23134758-68ab0efee1477745fc8aff6a6';
+
+// axios.defaults.baseURL = BASE_URL;
+// let params = `&q=${query}&page=${page}&per_page=${perPage}&key=${KEY_API}`;
+
+// const api = {
+//   getPicturesPixabayApi,
+// }
+
+// export default api
 
 class App extends Component {
   state = {
-    contacts: dataBaseContacts,
-    filter: '',
+    // query: 'nature',
+    // page: 1,
+    // perPage: 12,
+
+    searchValue: '',
     showModal: false,
   };
 
-  componentDidMount() {
-    const dataContacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(dataContacts);
+  componentDidMount() {}
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.state.contacts !== prevState.contacts) {
+  //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  //   }
+  // }
 
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
+  // deleteContact = contactId => {
+  //   this.setState(prewState => ({
+  //     contacts: prewState.contacts.filter(contact => contact.id !== contactId),
+  //   }));
+  // };
 
-  deleteContact = contactId => {
-    this.setState(prewState => ({
-      contacts: prewState.contacts.filter(contact => contact.id !== contactId),
-    }));
+  handleFormSubmit = e => {
+    e.preventDefault();
+    console.log(this.state.searchValue);
+
+    // const check = this.state.contacts.some(
+    //   contact => contact.name.toLowerCase() === contactic.name.toLowerCase(),
+    // );
+
+    // check
+    //   ? alert(`${contactic.name} is already in contacts`)
+    //   : this.setState(({ contacts }) => ({
+    //       contacts: [contactic, ...contacts],
+    //     }));
   };
 
-  formSubmitHandler = contactic => {
-    // console.log(contact);
-
-    const check = this.state.contacts.some(
-      contact => contact.name.toLowerCase() === contactic.name.toLowerCase(),
-    );
-
-    check
-      ? alert(`${contactic.name} is already in contacts`)
-      : this.setState(({ contacts }) => ({
-          contacts: [contactic, ...contacts],
-        }));
+  handleChange = e => {
+    this.setState({ searchValue: e.target.value });
   };
 
-  changeFilter = e => {
-    this.setState({ filter: e.currentTarget.value });
-  };
+  // getDisplayContacts = () => {
+  //   const { contacts, filter } = this.state;
+  //   const normalFilter = filter.toLowerCase();
 
-  getDisplayContacts = () => {
-    const { contacts, filter } = this.state;
-    const normalFilter = filter.toLowerCase();
-
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalFilter),
-    );
-  };
+  //   return contacts.filter(contact =>
+  //     contact.name.toLowerCase().includes(normalFilter),
+  //   );
+  // };
 
   // Передать на onClick для открытия или закрытия//
   toggleModal = () => {
@@ -69,22 +82,17 @@ class App extends Component {
   };
 
   render() {
-    const { filter, showModal } = this.state;
-    const displayContacts = this.getDisplayContacts();
+    const { showModal } = this.state;
+    // const displayContacts = this.getDisplayContacts();
 
     return (
       <div>
-        {showModal && <Modal onClose={this.toggleModal} />}
-
-        <h1>Phonebook</h1>
-        <ContactForm submit={this.formSubmitHandler} />
-
-        <h2>Contacts</h2>
-        <Filter filter={filter} change={this.changeFilter} />
-        <ContactList
-          contacts={displayContacts}
-          onDeleteContact={this.deleteContact}
+        <Searchbar
+          onSubmit={this.handleFormSubmit}
+          onChange={this.handleChange}
         />
+        {/* <ImageGallery/> */}
+        {showModal && <Modal onClose={this.toggleModal} />}
       </div>
     );
   }
