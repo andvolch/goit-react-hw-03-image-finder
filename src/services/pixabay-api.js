@@ -19,8 +19,8 @@ function getPicturesPixabayApi(query, page, perPage) {
   return hits;
 }
 
-const api = {
-  getPicturesPixabayApi,
-};
+// const api = {
+//   getPicturesPixabayApi,
+// };
 
-export default api;
+export default getPicturesPixabayApi;

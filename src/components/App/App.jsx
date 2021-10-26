@@ -7,10 +7,8 @@ import { ToastContainer } from 'react-toastify';
 import Modal from '../Modal/Modal';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
-
-import getPicturesPixabayApi from '../../services/pixabay-api';
-
 import 'react-toastify/dist/ReactToastify.css';
+import getPicturesPixabayApi from '../../services/pixabay-api';
 
 // import axios from 'axios';
 
@@ -104,7 +102,7 @@ import 'react-toastify/dist/ReactToastify.css';
 class App extends Component {
   state = {
     query: '',
-    image: null,
+
     showModal: false,
   };
 
@@ -131,6 +129,7 @@ class App extends Component {
           onSubmit={this.handleFormSubmit}
           // onChange={this.handleChange}
         />
+        <ImageGallery query={this.state.query} />
         {/* {this.state.image &&
                     <div>
                         {this.state.image.map((image) =>
