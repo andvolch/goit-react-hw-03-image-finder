@@ -4,7 +4,7 @@ import { Component } from 'react';
 
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 // import Button from '../Button/Button';
-import API from '../../services/pixabay-api';
+import getPicturesPixabayApi from '../../services/pixabay-api';
 
 import s from './ImageGallery.module.css';
 
@@ -17,10 +17,11 @@ import s from './ImageGallery.module.css';
 
 class ImageGallery extends Component {
   state = {
-    images: null,
+    images: [],
+    page: 1,
     loading: false,
   };
-  componentDidUpdate(prevProps, prewState) {
+  componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.query;
     const nextQuery = this.props.query;
     if (prevQuery !== nextQuery) {
@@ -29,8 +30,22 @@ class ImageGallery extends Component {
       // console.log('this.props.query', this.props.query);
 
       this.setState({ loading: true });
-      // fetch('https://pixabay.com/api/?image_type=photo&orientation=horizontal&key=23134758-68ab0efee1477745fc8aff6a6&q=nature').then(res => res.json()).then(arr => arr.hits).then(images => this.setState({images})).finally(() => this.setState({loading: false}))
-      API(nextQuery, 1, 12);
+      // fetch(`https://pixabay.com/api/?image_type=photo&orientation=horizontal&key=23134758-68ab0efee1477745fc8aff6a6&q=${nextQuery}`)
+      //   .then(res => res.json())
+      //   .then(arr => arr.hits)
+      //   .then(images => this.setState({ images }))
+      //   .finally(() => this.setState({ loading: false }))
+
+      const { page } = this.state;
+      getPicturesPixabayApi(nextQuery, page).then(images => {
+        this.setState({ images });
+        // this.setState(prevState => ({
+        //   images: [...prevState.images, ...images],
+        //   page: prevState.page + 1,
+        // }))
+      });
+
+      // .finally(() => this.setState({ loading: false }))
 
       this.setState({ loading: false });
     }
@@ -41,30 +56,24 @@ class ImageGallery extends Component {
     const { query } = this.props;
 
     return (
-      <ul className={s.imageGallery}>
+      <>
         {loading && <div>Loading ...</div>}
         {!query && <div>Enter name image</div>}
-        {/* {images && <li>{images}</li>} */}
         {images && (
           <>
-            {images}.map((
-            {
-              (images.id,
-              images.tags,
-              images.webformatURL,
-              images.largeImageURL)
-            }
-            ) =>
-            <ImageGalleryItem
-              key={images.id}
-              tags={images.tags}
-              webformatURL={images.webformatURL}
-              largeImageURL={images.largeImageURL}
-            />
-            )
+            <ul className={s.imageGallery}>
+              {images.map(({ id, tags, webformatURL, largeImageURL }) => (
+                <ImageGalleryItem
+                  key={id}
+                  tags={tags}
+                  webformatURL={webformatURL}
+                  largeImageURL={largeImageURL}
+                />
+              ))}
+            </ul>
           </>
         )}
-      </ul>
+      </>
     );
     // return (
     //

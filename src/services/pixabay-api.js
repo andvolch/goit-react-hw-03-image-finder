@@ -6,20 +6,19 @@ const KEY_API = '23134758-68ab0efee1477745fc8aff6a6';
 
 axios.defaults.baseURL = BASE_URL;
 
-function getPicturesPixabayApi(query, page, perPage) {
-  let params = `&q=${query}&page=${page}&per_page=${perPage}&key=${KEY_API}`;
+function getPicturesPixabayApi(query, page) {
+  let params = `&q=${query}&page=${page}&per_page=12&key=${KEY_API}`;
 
-  // axios.get(params)
+  // return axios.get(params);
   //     .then((result)=> {console.log(result);})
   //     .catch((error) => {console.log(error);});
-  const {
-    data: { hits },
-  } = axios.get(params);
+  // const { data: { hits },} = axios.get(params);
 
-  return hits;
+  // return hits;
+  return axios.get(params);
 }
 
-// const api = {
+// export const api = {
 //   getPicturesPixabayApi,
 // };
 
