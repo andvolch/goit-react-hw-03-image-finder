@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { createPortal } from 'react-dom';
 
 import PropTypes from 'prop-types';
+
 import s from './Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
@@ -29,9 +30,13 @@ class Modal extends Component {
   }
 
   render() {
+    const { largeImageURL, tags } = this.props;
     return createPortal(
       <div className={s.overlay} onClick={this.handleCloseClick}>
-        <div className={s.modal}>{this.props.children}</div>
+        <div className={s.modal}>
+          {/* {this.props.children} */}
+          <img src={largeImageURL} alt={tags} />
+        </div>
       </div>,
       modalRoot,
     );
@@ -40,7 +45,9 @@ class Modal extends Component {
 
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
-  children: PropTypes.elementType,
+  largeImageURL: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+  // children: PropTypes.elementType,
 };
 
 export default Modal;

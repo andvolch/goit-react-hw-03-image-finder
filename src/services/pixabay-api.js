@@ -9,9 +9,6 @@ axios.defaults.baseURL = BASE_URL;
 function getPicturesPixabayApi(query, page) {
   let params = `&q=${query}&page=${page}&per_page=12&key=${KEY_API}`;
 
-  // return axios.get(params);
-  //     .then((result)=> {console.log(result);})
-  //     .catch((error) => {console.log(error);});
   // const { data: { hits },} = axios.get(params);
 
   // return hits;
