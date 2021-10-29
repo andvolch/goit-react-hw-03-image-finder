@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Modal from '../Modal/Modal';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
-import 'react-toastify/dist/ReactToastify.css';
 
 class App extends Component {
   state = {
@@ -34,10 +34,7 @@ class App extends Component {
 
     return (
       <div>
-        <Searchbar
-          onSubmit={this.handleFormSubmit}
-          // onChange={this.handleChange}
-        />
+        <Searchbar onSubmit={this.handleFormSubmit} />
         <ImageGallery
           query={this.state.query}
           onImageClick={this.onImageClick}

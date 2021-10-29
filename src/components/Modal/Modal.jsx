@@ -17,20 +17,21 @@ class Modal extends Component {
     window.removeEventListener('keydown', this.handleKeydown);
   }
 
-  handleKeydown(e) {
+  handleKeydown = e => {
     if (e.code === 'Escape') {
       this.props.onClose();
     }
-  }
+  };
 
-  handleCloseClick(e) {
-    if (e.target === e.currentTarget) {
+  handleCloseClick = e => {
+    if (e.currentTarget === e.target) {
       this.props.onClose();
     }
-  }
+  };
 
   render() {
     const { largeImageURL, tags } = this.props;
+
     return createPortal(
       <div className={s.overlay} onClick={this.handleCloseClick}>
         <div className={s.modal}>
@@ -47,7 +48,6 @@ Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
   largeImageURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
-  // children: PropTypes.elementType,
 };
 
 export default Modal;

@@ -3,7 +3,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
-// import Button from '../Button/Button';
+import Button from '../Button/Button';
 import Loader from '../Loader/Loader';
 import getPicturesPixabayApi from '../../services/pixabay-api';
 
@@ -23,23 +23,57 @@ class ImageGallery extends Component {
     error: null,
     status: Status.IDLE,
   };
+
+  // componentDidMount() {
+  //   this.loadImages();
+  // }
+
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.query;
     const nextQuery = this.props.query;
 
     if (prevQuery !== nextQuery) {
       this.setState({ status: Status.PENDING });
-      const { page } = this.state;
-
-      getPicturesPixabayApi(nextQuery, page)
-        .then(({ data: { hits } }) =>
-          this.setState({ images: hits, status: Status.RESOLVED }),
-        )
-        .catch(error => this.setState({ error, status: Status.REJECTED }));
+      // const { page } = this.state;
+      this.loadImages();
+      // getPicturesPixabayApi(nextQuery, page)
+      //   .then(({ data: { hits } }) =>
+      //     this.setState({ images: hits, status: Status.RESOLVED }),
+      //   )
+      //   .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
+
+    if (prevState.page !== this.state.page) {
+      this.setState({ status: Status.PENDING });
+      // const { page } = this.state;
+      this.loadImages();
+    }
+
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
   }
 
-  nextPage = () => this.setState(this.state.page + 1);
+  loadImages = () => {
+    this.setState({ status: Status.PENDING });
+    const { page } = this.state;
+
+    getPicturesPixabayApi(this.props.query, page)
+      .then(({ data: { hits } }) =>
+        this.setState(prevState => ({
+          images: [...prevState.images, ...hits],
+          status: Status.RESOLVED,
+        })),
+      )
+      .catch(error => this.setState({ error, status: Status.REJECTED }));
+  };
+
+  loadMore = () => {
+    this.setState(prevState => {
+      return { page: prevState.page + 1 };
+    });
+  };
 
   render() {
     const { images } = this.state;
@@ -72,6 +106,7 @@ class ImageGallery extends Component {
               />
             ))}
           </ul>
+          <Button loadMore={this.loadMore} />
         </>
       );
     }

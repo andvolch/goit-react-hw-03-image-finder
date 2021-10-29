@@ -3,29 +3,6 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 import s from './Searchbar.module.css';
-// import 'react-toastify/dist/ReactToastify.css';
-
-// query
-
-// const Searchbar = ({ onSubmit, onChange }) => (
-//   <header className={s.searchbar}>
-//     <form className={s.searchForm}>
-//       <button type="submit" className={s.searchForm__button} onClick={onSubmit}>
-//         <span className={s.searchForm__label}>Search images and fotos</span>
-//       </button>
-
-//       <input
-//         className={s.searchForm__input}
-//         type="text"
-//         name="search"
-//         autocomplete="off"
-//         autofocus
-//         placeholder="Search images and photos"
-//         onChange={onChange}
-//       />
-//     </form>
-//   </header>
-// );
 
 class Searchbar extends Component {
   state = {
@@ -57,6 +34,7 @@ class Searchbar extends Component {
             className={s.searchForm__input}
             type="text"
             name="search"
+            value={this.state.query}
             // autocomplete="off"
             // autofocus
             placeholder="Search images and photos"
