@@ -31,43 +31,52 @@ class ImageGallery extends Component {
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.query;
     const nextQuery = this.props.query;
+    const { page } = this.state;
 
     if (prevQuery !== nextQuery) {
       this.setState({ status: Status.PENDING });
-      // const { page } = this.state;
-      this.loadImages();
-      // getPicturesPixabayApi(nextQuery, page)
-      //   .then(({ data: { hits } }) =>
-      //     this.setState({ images: hits, status: Status.RESOLVED }),
-      //   )
-      //   .catch(error => this.setState({ error, status: Status.REJECTED }));
+      // this.loadImages();
+      getPicturesPixabayApi(nextQuery, page)
+        .then(({ data: { hits } }) =>
+          this.setState({ images: hits, status: Status.RESOLVED }),
+        )
+        .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
 
     if (prevState.page !== this.state.page) {
       this.setState({ status: Status.PENDING });
-      // const { page } = this.state;
-      this.loadImages();
+      // this.loadImages();
+      getPicturesPixabayApi(this.props.query, page)
+        .then(({ data: { hits } }) =>
+          this.setState(prevState => ({
+            images: [...prevState.images, ...hits],
+            status: Status.RESOLVED,
+          })),
+        )
+        .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
 
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
+    if (page > 1) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }
 
-  loadImages = () => {
-    this.setState({ status: Status.PENDING });
-    const { page } = this.state;
+  // loadImages = () => {
+  //   this.setState({ status: Status.PENDING });
+  //   const { page } = this.state;
 
-    getPicturesPixabayApi(this.props.query, page)
-      .then(({ data: { hits } }) =>
-        this.setState(prevState => ({
-          images: [...prevState.images, ...hits],
-          status: Status.RESOLVED,
-        })),
-      )
-      .catch(error => this.setState({ error, status: Status.REJECTED }));
-  };
+  //   getPicturesPixabayApi(this.props.query, page)
+  //     .then(({ data: { hits } }) =>
+  //       this.setState(prevState => ({
+  //         images: [...prevState.images, ...hits],
+  //         status: Status.RESOLVED,
+  //       })),
+  //     )
+  //     .catch(error => this.setState({ error, status: Status.REJECTED }));
+  // };
 
   loadMore = () => {
     this.setState(prevState => {

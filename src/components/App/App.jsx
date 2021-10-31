@@ -30,15 +30,12 @@ class App extends Component {
   };
 
   render() {
-    const { showModal, tags, largeImageURL } = this.state;
+    const { showModal, tags, largeImageURL, query } = this.state;
 
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery
-          query={this.state.query}
-          onImageClick={this.onImageClick}
-        />
+        <ImageGallery query={query} onImageClick={this.onImageClick} />
         {showModal && (
           <Modal
             onClose={this.toggleModal}
