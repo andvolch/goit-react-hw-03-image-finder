@@ -24,10 +24,6 @@ class ImageGallery extends Component {
     status: Status.IDLE,
   };
 
-  // componentDidMount() {
-  //   this.loadImages();
-  // }
-
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.query;
     const nextQuery = this.props.query;
@@ -35,54 +31,40 @@ class ImageGallery extends Component {
 
     if (prevQuery !== nextQuery) {
       this.setState({ status: Status.PENDING });
-      // this.loadImages();
+
       getPicturesPixabayApi(nextQuery, page)
         .then(({ data: { hits } }) =>
           this.setState({ images: hits, status: Status.RESOLVED }),
         )
         .catch(error => this.setState({ error, status: Status.REJECTED }));
-    }
-
-    if (prevState.page !== this.state.page) {
-      this.setState({ status: Status.PENDING });
-      // this.loadImages();
-      getPicturesPixabayApi(this.props.query, page)
-        .then(({ data: { hits } }) =>
-          this.setState(prevState => ({
-            images: [...prevState.images, ...hits],
-            status: Status.RESOLVED,
-          })),
-        )
-        .catch(error => this.setState({ error, status: Status.REJECTED }));
-    }
-
-    if (page > 1) {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: 'smooth',
-      });
+      this.setState({ page: 1 });
     }
   }
 
-  // loadImages = () => {
-  //   this.setState({ status: Status.PENDING });
-  //   const { page } = this.state;
-
-  //   getPicturesPixabayApi(this.props.query, page)
-  //     .then(({ data: { hits } }) =>
-  //       this.setState(prevState => ({
-  //         images: [...prevState.images, ...hits],
-  //         status: Status.RESOLVED,
-  //       })),
-  //     )
-  //     .catch(error => this.setState({ error, status: Status.REJECTED }));
-  // };
-
   loadMore = () => {
-    this.setState(prevState => {
-      return { page: prevState.page + 1 };
-    });
+    const { page } = this.state;
+
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+
+    getPicturesPixabayApi(this.props.query, page)
+      .then(({ data: { hits } }) => {
+        this.setState(prevState => ({
+          images: [...prevState.images, ...hits],
+          status: Status.RESOLVED,
+        }));
+        this.pageScroll();
+      })
+      .catch(error => this.setState({ error, status: Status.REJECTED }));
   };
+
+  pageScroll() {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  }
 
   render() {
     const { images } = this.state;
