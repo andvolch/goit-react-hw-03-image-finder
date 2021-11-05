@@ -37,6 +37,7 @@ class ImageGallery extends Component {
           this.setState({ images: hits, status: Status.RESOLVED }),
         )
         .catch(error => this.setState({ error, status: Status.REJECTED }));
+
       this.setState({ page: 1 });
     }
   }
@@ -44,14 +45,11 @@ class ImageGallery extends Component {
   loadMore = () => {
     const { page } = this.state;
 
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-
     getPicturesPixabayApi(this.props.query, page)
       .then(({ data: { hits } }) => {
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
+          page: prevState.page + 1,
           status: Status.RESOLVED,
         }));
         this.pageScroll();
@@ -106,7 +104,6 @@ class ImageGallery extends Component {
 
 ImageGallery.propTypes = {
   query: PropTypes.string.isRequired,
-  getPicturesPixabayApi: PropTypes.func.isRequired,
   onImageClick: PropTypes.func.isRequired,
 };
 
