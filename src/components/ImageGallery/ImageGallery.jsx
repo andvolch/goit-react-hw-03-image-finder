@@ -37,7 +37,6 @@ class ImageGallery extends Component {
           this.setState({ images: hits, status: Status.RESOLVED }),
         )
         .catch(error => this.setState({ error, status: Status.REJECTED }));
-
       this.setState({ page: 1 });
     }
   }
@@ -104,6 +103,7 @@ class ImageGallery extends Component {
 
 ImageGallery.propTypes = {
   query: PropTypes.string.isRequired,
+
   onImageClick: PropTypes.func.isRequired,
 };
 
