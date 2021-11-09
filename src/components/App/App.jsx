@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import getPicturesPixabayApi from '../../services/pixabay-api';
+
+import Loader from '../Loader/Loader';
+import Button from '../Button/Button';
 import Modal from '../Modal/Modal';
 import Searchbar from '../Searchbar/Searchbar';
 import ImageGallery from '../ImageGallery/ImageGallery';
@@ -9,13 +13,56 @@ import ImageGallery from '../ImageGallery/ImageGallery';
 class App extends Component {
   state = {
     query: '',
+    images: [],
+    page: 1,
+    error: null,
     showModal: false,
     tags: '',
     largeImageURL: '',
+    loading: false,
   };
 
   handleFormSubmit = query => {
-    this.setState({ query });
+    this.setState({ query, page: 1, images: [] });
+  };
+
+  fetchApi = () => {
+    const { query, page } = this.state;
+
+    getPicturesPixabayApi(query, page)
+      .then(({ data: { hits } }) => {
+        this.setState(prevState => ({
+          images: [...prevState.images, ...hits],
+          page: prevState.page + 1,
+        }));
+      })
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ loading: false }));
+  };
+
+  loadMore = () => {
+    this.fetchApi(this.state.page);
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    const prevQuery = prevState.query;
+    const { query, page, images } = this.state;
+
+    if (prevQuery !== query) {
+      this.setState({ loading: true });
+      this.fetchApi(query, page);
+    }
+
+    if (images.length > 12) {
+      this.pageScroll();
+    }
+  }
+
+  pageScroll = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
   };
 
   toggleModal = () => {
@@ -30,12 +77,33 @@ class App extends Component {
   };
 
   render() {
-    const { showModal, tags, largeImageURL, query } = this.state;
+    const { showModal, tags, largeImageURL, query, page, images, loading } =
+      this.state;
 
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery query={query} onImageClick={this.onImageClick} />
+
+        {loading && <Loader />}
+
+        {images.length > 0 ? (
+          <ImageGallery
+            query={query}
+            page={page}
+            images={images}
+            loadMore={this.loadMore}
+            onImageClick={this.onImageClick}
+          />
+        ) : (
+          <h2
+            style={{ padding: '10px 20px', textAlign: 'center', color: 'red' }}
+          >
+            Error, please repeat the request or change the input language
+          </h2>
+        )}
+
+        {images.length >= 12 && <Button loadMore={this.loadMore} />}
+
         {showModal && (
           <Modal
             onClose={this.toggleModal}
@@ -43,6 +111,7 @@ class App extends Component {
             largeImageURL={largeImageURL}
           />
         )}
+
         <ToastContainer autoClose={5000} />
       </div>
     );
