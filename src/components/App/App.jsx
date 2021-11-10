@@ -86,7 +86,7 @@ class App extends Component {
 
         {loading && <Loader />}
 
-        {images.length > 0 ? (
+        {images && (
           <ImageGallery
             query={query}
             page={page}
@@ -94,13 +94,11 @@ class App extends Component {
             loadMore={this.loadMore}
             onImageClick={this.onImageClick}
           />
-        ) : (
-          <h2
-            style={{ padding: '10px 20px', textAlign: 'center', color: 'red' }}
-          >
-            Error, please repeat the request or change the input language
-          </h2>
         )}
+
+        {/* <h2 style={{ padding: '10px 20px', textAlign: 'center', color: 'red' }}>
+            Error, please repeat the request or change the input language
+          </h2> */}
 
         {images.length >= 12 && <Button loadMore={this.loadMore} />}
 
